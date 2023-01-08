@@ -19,7 +19,7 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
     const orderMenuswithOrder = await Promise.all(orderMenus.map(async (orderMenu) => {
         const order = await Order.findById(orderMenu.order).lean().exec()
         const menu = await Menu.findById(orderMenu.menu).lean().exec()
-        return { ...orderMenu, order: order.ticket, menu: menu.name }
+        return { ...orderMenu, order: order.ticket, menu: menu.name, menu_price: menu.price }
     }))
 
     res.json(orderMenuswithOrder)
@@ -30,16 +30,16 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewOrderMenu = asyncHandler(async (req, res) => {
-    const { order, menu, note, quantity, addons } = req.body
+    const { order, menu, note, quantity, addons, addons_price } = req.body
 
     //confirm data
     if (!order || !menu || !quantity ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
-    const orderMenuObject = (!Array.isArray(addons) || !addons.length)
+    const orderMenuObject = (!Array.isArray(addons) || !addons.length || !Array.isArray(addons_price) || !addons_price.length)
         ? { order, menu, note, quantity }
-        : { order, menu, note, quantity, addons }
+        : { order, menu, note, quantity, addons, addons_price }
 
     // Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)
@@ -57,7 +57,7 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrderMenu = asyncHandler(async (req, res) => {
-    const {id, order, menu, note, quantity, addons} = req.body
+    const {id, order, menu, note, quantity, addons, addons_price} = req.body
 
     //confirm data
     if (!id || !order || !menu || !quantity ){
@@ -75,6 +75,7 @@ const updateOrderMenu = asyncHandler(async (req, res) => {
     orderMenu.note = note
     orderMenu.quantity = quantity
     orderMenu.addons = addons
+    orderMenu.addons_price = addons_price
 
     const updatedOrderMenu = await orderMenu.save()
 
