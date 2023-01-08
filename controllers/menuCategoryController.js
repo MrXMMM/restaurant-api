@@ -54,7 +54,7 @@ const updateMenuC = asyncHandler(async (req, res) => {
     const {id, name } = req.body
 
     //confirm data
-    if (+id || !name ){
+    if (!id || !name ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 

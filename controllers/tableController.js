@@ -46,6 +46,28 @@ const createNewTable = asyncHandler(async (req, res) => {
 
 })
 
+const updateTable = asyncHandler(async (req, res) => {
+    const {id, status} = req.body
+
+    //confirm data
+    if (!id || typeof status != 'boolean'){
+        return res.status(400).json({ message: 'All fields are required'})
+    }
+
+    const table = await Table.findById(id).exec()
+
+    if (!table){
+        return res.status(400).json({ message: 'Table not found'})
+    }
+
+
+    table.status = status
+
+    const updatedTable = await table.save()
+
+    res.json({ message:  `${updatedTable.table_num} updated`})
+
+})
 
 // @desc Delete a table
 // @route DELETE /tables
@@ -80,5 +102,6 @@ const deleteTable = asyncHandler(async (req, res) => {
 module.exports = {
     getAllTables,
     createNewTable,
+    updateTable,
     deleteTable
 }
