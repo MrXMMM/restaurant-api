@@ -28,14 +28,14 @@ const getAllOrder = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewOrder = asyncHandler(async (req, res) => {
-    const { table } = req.body
+    const { table, price } = req.body
 
     //confirm data
-    if (!table ){
+    if (!table || !price ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
-    const orderObject = { table }
+    const orderObject = { table, price }
 
     // Create and store new order
     const order = await Order.create(orderObject)
@@ -53,10 +53,10 @@ const createNewOrder = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrder = asyncHandler(async (req, res) => {
-    const {id, status} = req.body
+    const {id, status, price} = req.body
 
     //confirm data
-    if (!id || typeof status != 'boolean'){
+    if (!id || typeof status != 'boolean' || !price){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -67,6 +67,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     }
 
     order.status = status
+    order.price = price
 
     const updatedOrder = await order.save()
 

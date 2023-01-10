@@ -12,6 +12,9 @@ const OrderSchema = new mongoose.Schema({
         default: 0,
         require: true
     },
+    price:{
+        type: Number
+    }
 },
 {
     timestamps: true
