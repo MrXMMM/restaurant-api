@@ -92,9 +92,9 @@ const deleteMenuC = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'MenuCategory ID Require'})
     }
 
-    const menu = await Menu.findOne({ menuCMenuCategory: id }).lean().exec()
+    const menu = await Menu.findOne({ MenuCategory: id }).lean().exec()
     if (menu){
-        return res.status(400).json({ message: 'MenuCategory has assigned menus' })
+        return res.status(400).json({ message: 'ในหมวดหมู่นี้มีเมนูอยู่' })
     }
 
     const menuC = await MenuCategory.findById(id).exec()
