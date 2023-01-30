@@ -30,7 +30,7 @@ const createNewAddonC = asyncHandler(async (req, res) => {
     const duplicate = await AddonCategory.findOne({ name }).lean().exec()
 
     if (duplicate) {
-        return res.status(409).json({ message: 'duplicate Category Name' })
+        return res.status(409).json({ message: 'ชื่อหมวดหมู่ซ้ำ' })
     }
 
     const addonCObject = { name }
@@ -94,7 +94,7 @@ const deleteAddonC = asyncHandler(async (req, res) => {
 
     const addon = await Addon.findOne({ category: id }).lean().exec()
     if (addon){
-        return res.status(400).json({ message: 'AddonCategory has assigned addons' })
+        return res.status(400).json({ message: 'หมวดหมู่นี้ยังมีวัตถุดิบหรือตัวเลือกอยู่' })
     }
 
     const addonC = await AddonCategory.findById(id).exec()

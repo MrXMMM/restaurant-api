@@ -35,6 +35,13 @@ const createNewAddon = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'All fields are required'})
     }
 
+    //check for duplicate
+    const duplicate = await Addon.findOne({ name }).lean().exec()
+
+    if (duplicate) {
+        return res.status(409).json({ message: 'ชื่อตัวเลือกหรือวัตถุดิบซ้ำ' })
+    }
+
     const addonObject = { category, name, price}
 
     // Create and store new addon

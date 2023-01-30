@@ -28,10 +28,10 @@ const getAllMenu = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewMenu = asyncHandler(async (req, res) => {
-    const { category, name, price, img, explaination} = req.body
+    const { category, name, price, explaination} = req.body
 
     //confirm data
-    if (!category || !name || !price){
+    if (!category || !name || !price || !explaination){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -42,7 +42,7 @@ const createNewMenu = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'duplicate Name' })
     }
 
-    const menuObject = { category, name, price, img, explaination}
+    const menuObject = { category, name, price, explaination}
 
     // Create and store new menu
     const menu = await Menu.create(menuObject)
@@ -60,7 +60,7 @@ const createNewMenu = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateMenu = asyncHandler(async (req, res) => {
-    const {id, category, name, price, status, img, explaination} = req.body
+    const {id, category, name, price, status, explaination} = req.body
 
     //confirm data
     if (!id || !category || !name || !price || typeof status != 'boolean' || !explaination){

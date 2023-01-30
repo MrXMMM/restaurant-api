@@ -43,21 +43,22 @@ const createNewMenuAddonCategory = asyncHandler(async (req, res) => {
 // @route DELETE /menuAddonCategorys
 // @access Private
 const deleteMenuAddonCategory = asyncHandler(async (req, res) => {
-    const { id } = req.body
+    const { menu, addon } = req.body
 
     // Confirm data
-    if (!id) {
-        return res.status(400).json({ message: 'MenuAddonCategory ID required' })
+    if (!menu || !addon) {
+        return res.status(400).json({ message: 'All fields are required' })
     }
 
     // Confirm menuAddonCategory exists to delete 
-    const menuAddonCategory = await MenuAddonCategory.findOne({ id }).exec()
+    const findbymenu = await MenuAddonCategory.findOne({ menu }).lean().exec()
+    const findbyaddoncategory = await findbymenu.findOne({ addon }).lean().exec()
 
-    if (!menuAddonCategory) {
+    if (!findbyaddoncategory) {
         return res.status(400).json({ message: 'MenuAddonCategory not found' })
     }
 
-    const result = await menuAddonCategory.deleteOne()
+    const result = await findbyaddoncategory.deleteOne()
 
     const reply = `MenuAddonCategory deleted`
 
