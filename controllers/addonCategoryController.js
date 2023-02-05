@@ -19,10 +19,10 @@ const getAllAddonC = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewAddonC = asyncHandler(async (req, res) => {
-    const { name } = req.body
+    const { name, choose } = req.body
 
     //confirm data
-    if (!name ){
+    if (!name || !choose ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -33,7 +33,7 @@ const createNewAddonC = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'ชื่อหมวดหมู่ซ้ำ' })
     }
 
-    const addonCObject = { name }
+    const addonCObject = { name, choose }
 
     // Create and store new addonC
     const addonC = await AddonCategory.create(addonCObject)
@@ -45,16 +45,16 @@ const createNewAddonC = asyncHandler(async (req, res) => {
         res.status(400).json({ message: 'Invalid data recieved'})
     }
 })
-
+8
 // @desc Update all AddonC
 // @route PATCH /AddonC
 // @access Private
 
 const updateAddonC = asyncHandler(async (req, res) => {
-    const {id, name } = req.body
+    const {id, name, choose } = req.body
 
     //confirm data
-    if (!id || !name ){
+    if (!id || !name || !choose){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -74,6 +74,7 @@ const updateAddonC = asyncHandler(async (req, res) => {
     }
 
     addonC.name = name
+    addonC.choose = choose
 
     const updatedAddonC = await addonC.save()
 

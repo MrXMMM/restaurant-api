@@ -31,7 +31,7 @@ const createNewMenu = asyncHandler(async (req, res) => {
     const { category, name, price, explaination} = req.body
 
     //confirm data
-    if (!category || !name || !price || !explaination){
+    if (!category || !name || !price){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -63,7 +63,7 @@ const updateMenu = asyncHandler(async (req, res) => {
     const {id, category, name, price, status, explaination} = req.body
 
     //confirm data
-    if (!id || !category || !name || !price || typeof status != 'boolean' || !explaination){
+    if (!id || !category || !name || !price || typeof status != 'boolean'){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
