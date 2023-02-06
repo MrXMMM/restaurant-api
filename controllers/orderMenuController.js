@@ -19,7 +19,7 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
     const orderMenuswithOrder = await Promise.all(orderMenus.map(async (orderMenu) => {
         const order = await Order.findById(orderMenu.order).lean().exec()
         const menu = await Menu.findById(orderMenu.menu).lean().exec()
-        return { ...orderMenu, order: order.ticket, menu: menu.name, menu_price: menu.price }
+        return { ...orderMenu, order: order.ticket, menu: menu.name, menu_price: menu.price, table: order.table }
     }))
 
     res.json(orderMenuswithOrder)
@@ -37,7 +37,7 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'All fields are required'})
     }
 
-    const orderMenuObject = (!Array.isArray(addons) || !addons.length || !Array.isArray(addons_price) || !addons_price.length)
+    const orderMenuObject = (!Array.isArray(addons) || !addons.length)
         ? { order, menu, note, quantity }
         : { order, menu, note, quantity, addons, addons_price }
 

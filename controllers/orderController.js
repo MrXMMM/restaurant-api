@@ -22,7 +22,7 @@ const getAllOrder = asyncHandler (async (req, res) => {
 
     res.json(orderswithTable)
 })
-
+ 
 // @desc Create all Order
 // @route POST /Order
 // @access Private
@@ -53,7 +53,7 @@ const createNewOrder = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrder = asyncHandler(async (req, res) => {
-    const {id, status, price} = req.body
+    const {id, status, price, createdAt} = req.body
 
     //confirm data
     if (!id || typeof status != 'boolean' || !price){
@@ -68,6 +68,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 
     order.status = status
     order.price = price
+    if (createdAt) order.createdAt = createdAt
 
     const updatedOrder = await order.save()
 
