@@ -17,9 +17,8 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
     // See Promise.all with map() here: https://youtu.be/4lqJBBEpjRE 
     // You could also do this with a for...of loop
     const orderMenuswithOrder = await Promise.all(orderMenus.map(async (orderMenu) => {
-        const order = await Order.findById(orderMenu.order).lean().exec()
         const menu = await Menu.findById(orderMenu.menu).lean().exec()
-        return { ...orderMenu, order: order.ticket, menu: menu.name, menu_price: menu.price, table: order.table }
+        return { ...orderMenu, menu: menu.name, menu_price: menu.price }
     }))
 
     res.json(orderMenuswithOrder)
@@ -30,16 +29,16 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewOrderMenu = asyncHandler(async (req, res) => {
-    const { order, menu, note, quantity, addons, addons_price } = req.body
+    const { menu, table, note, quantity, addons, addons_price } = req.body
 
     //confirm data
-    if (!order || !menu || !quantity ){
+    if (!menu || !table || !quantity ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
     const orderMenuObject = (!Array.isArray(addons) || !addons.length)
-        ? { order, menu, note, quantity }
-        : { order, menu, note, quantity, addons, addons_price }
+        ? { menu, table, note, quantity }
+        : { menu, table, note, quantity, addons, addons_price }
 
     // Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)
@@ -57,10 +56,10 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrderMenu = asyncHandler(async (req, res) => {
-    const {id, order, menu, note, quantity, addons, addons_price} = req.body
+    const {id, order, menu, table, note, quantity, addons, addons_price} = req.body
 
     //confirm data
-    if (!id || !order || !menu || !quantity ){
+    if (!id || !menu || !table || !quantity ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -72,6 +71,7 @@ const updateOrderMenu = asyncHandler(async (req, res) => {
 
     orderMenu.order = order
     orderMenu.menu = menu
+    orderMenu.table = table
     orderMenu.note = note
     orderMenu.quantity = quantity
     orderMenu.addons = addons

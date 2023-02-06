@@ -3,13 +3,16 @@ const mongoose = require('mongoose')
 const OrderMenuSchema = new mongoose.Schema({
     order: {
         type: mongoose.Schema.Types.ObjectId,
-        require: true,
         ref: 'Order'
     },
     menu: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
         ref: 'Menu'
+    },
+    table:{
+        type: Number,
+        require: true
     },
     note: {
         type: String
