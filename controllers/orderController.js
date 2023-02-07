@@ -56,7 +56,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     const {id, status, price, createdAt} = req.body
 
     //confirm data
-    if (!id || !status || !price){
+    if (!id || status < 0 || !price){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
