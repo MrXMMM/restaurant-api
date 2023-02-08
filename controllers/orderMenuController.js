@@ -18,7 +18,7 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
     // You could also do this with a for...of loop
     const orderMenuswithOrder = await Promise.all(orderMenus.map(async (orderMenu) => {
         const menu = await Menu.findById(orderMenu.menu).lean().exec()
-        return { ...orderMenu, menu: menu.name, menu_price: menu.price }
+        return { ...orderMenu, menu_name: menu.name, menu_price: menu.price }
     }))
 
     res.json(orderMenuswithOrder)
