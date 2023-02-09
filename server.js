@@ -38,6 +38,7 @@ app.use('/menucategory', require('./routes/menuCategoryRoutes'))
 app.use('/menuaddoncategory', require('./routes/menuAddonCategoryRoutes'))
 app.use('/addon', require('./routes/addonRoutes'))
 app.use('/addoncategory', require('./routes/addonCategoryRoutes'))
+app.use('/income', require('./routes/incomeRoutes'))
 
 app.all('*', (req, res) => {
     res.status(404)
