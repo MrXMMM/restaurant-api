@@ -1,4 +1,5 @@
 const Employee = require('../models/Employee')
+const Owner = require('../models/Owner')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
@@ -7,49 +8,85 @@ const asyncHandler = require('express-async-handler')
 // @route POST /auth
 // @access Public
 const login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, status } = req.body
 
-    if (!email || !password) {
+    if (!email || !password || !status) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
-    const foundEmployee = await Employee.findOne({ email }).exec()
+    let accessToken
+    let refreshToken
 
-    if (!foundEmployee || !foundEmployee.active) {
-        return res.status(401).json({ message: 'Unauthorized' })
+    if (status === "employee" ){
+        const foundEmployee = await Employee.findOne({ email }).exec()
+
+        if (!foundEmployee || !foundEmployee.active) {
+            return res.status(401).json({ message: 'Unauthorized' })
+        }
+
+        const match = await bcrypt.compare(password, foundEmployee.password)
+
+        if (!match) return res.status(401).json({ message: 'Unauthorized' })
+
+        accessToken = jwt.sign(
+            {
+            "UserInfo": {
+                    "email": foundEmployee.email,
+                    "position": foundEmployee.position,
+                    "name": foundEmployee.name,
+                    "phone": foundEmployee.phone,
+                    "status": "Employee"
+                }
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '15m' }
+        )
+
+        refreshToken = jwt.sign(
+            { "email": foundEmployee.email },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '7d' }
+        )
+     
     }
 
-    const match = await bcrypt.compare(password, foundEmployee.password)
+    else{
+        const foundOwner = await Owner.findOne({ email }).exec()
 
-    if (!match) return res.status(401).json({ message: 'Unauthorized' })
+        if (!foundOwner) {
+            return res.status(401).json({ message: 'Unauthorized' })
+        }
 
-    const accessToken = jwt.sign(
-        {
-            "EmployeeInfo": {
-                "email": foundEmployee.email,
-                "position": foundEmployee.position,
-                "name": foundEmployee.name,
-                "phone": foundEmployee.phone
-            }
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
-    )
+        const match = await bcrypt.compare(password, foundOwner.password)
 
-    const refreshToken = jwt.sign(
-        { "email": foundEmployee.email },
-        process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '7d' }
-    )
+        if (!match) return res.status(401).json({ message: 'Unauthorized' })
 
-    // Create secure cookie with refresh token 
-    res.cookie('jwt', refreshToken, {
+        accessToken = jwt.sign(
+            {
+            "UserInfo": {
+                    "email": foundOwner .email,
+                    "name": foundOwner.name,
+                    "status": "Owner"
+                }
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '15m' }
+        )
+
+        refreshToken = jwt.sign(
+            { "email": foundOwner.email },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '7d' }
+        )
+    }
+
+     // Create secure cookie with refresh token 
+     res.cookie('jwt', refreshToken, {
         httpOnly: true, //accessible only by web server 
         secure: true, //https
         sameSite: 'None', //cross-site cookie 
         maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
     })
-
     // Send accessToken containing email and employee info
     res.json({ accessToken })
 })
