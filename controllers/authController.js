@@ -18,7 +18,6 @@ const login = asyncHandler(async (req, res) => {
     let refreshToken
 
     if (status === "employee" ){
-        console.log('employee')
         const foundEmployee = await Employee.findOne({ email }).exec()
 
         if (!foundEmployee || !foundEmployee.active) {
@@ -52,7 +51,6 @@ const login = asyncHandler(async (req, res) => {
     }
 
     else{
-        console.log('owner')
         const foundOwner = await Owner.findOne({ email }).exec()
 
         if (!foundOwner) {
@@ -60,7 +58,7 @@ const login = asyncHandler(async (req, res) => {
         }
 
         const match = await bcrypt.compare(password, foundOwner.password)
-
+        console.log('match')
         if (!match) return res.status(401).json({ message: 'Unauthorized' })
 
         accessToken = jwt.sign(

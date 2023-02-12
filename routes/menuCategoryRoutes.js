@@ -4,6 +4,7 @@ const menuCategoryController = require('../controllers/menuCategoryController')
 const verifyJWT = require('../middleware/verifyJWT')
 
 
+
 router.route('/')
     .get(menuCategoryController.getAllMenuC)
     .post(menuCategoryController.createNewMenuC)
