@@ -71,7 +71,6 @@ const updateOrderMenu = asyncHandler(async (req, res) => {
 
     orderMenu.order = order
     orderMenu.menu = menu
-    orderMenu.table = table
     orderMenu.note = note
     orderMenu.quantity = quantity
     orderMenu.addons = addons
