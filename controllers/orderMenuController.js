@@ -56,10 +56,10 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrderMenu = asyncHandler(async (req, res) => {
-    const {id, order, menu, table, note, quantity, addons, addons_price} = req.body
+    const {id, order, menu, note, quantity, addons, addons_price} = req.body
 
     //confirm data
-    if (!id || !menu || !table || !quantity ){
+    if (!id || !order || !menu || !quantity ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
