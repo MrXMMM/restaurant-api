@@ -29,7 +29,7 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewOrderMenu = asyncHandler(async (req, res) => {
-    const { menu, table, note, quantity, addons, addons_price } = req.body
+    const { menu, table, note, quantity, addons, addons_price, status } = req.body
 
     //confirm data
     if (!menu || !table || !quantity ){
@@ -37,8 +37,8 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
     }
 
     const orderMenuObject = (!Array.isArray(addons) || !addons.length)
-        ? { menu, table, note, quantity }
-        : { menu, table, note, quantity, addons, addons_price }
+        ? { menu, table, note, quantity, status}
+        : { menu, table, note, quantity, addons, addons_price, status }
 
     // Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)
@@ -56,10 +56,10 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrderMenu = asyncHandler(async (req, res) => {
-    const {id, order, menu, note, quantity, addons, addons_price} = req.body
+    const {id, order, menu, note, quantity, addons, addons_price, status} = req.body
 
     //confirm data
-    if (!id || !order || !menu || !quantity ){
+    if (!id || !order || !menu || !quantity || status < 0){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -75,6 +75,7 @@ const updateOrderMenu = asyncHandler(async (req, res) => {
     orderMenu.quantity = quantity
     orderMenu.addons = addons
     orderMenu.addons_price = addons_price
+    orderMenu.status = status
 
     const updatedOrderMenu = await orderMenu.save()
 
