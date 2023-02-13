@@ -26,6 +26,10 @@ const OrderMenuSchema = new mongoose.Schema({
     },
     addons_price: {
         type: Number
+    },
+    status:{
+        type: Number,
+        require: true
     }
 })
 
