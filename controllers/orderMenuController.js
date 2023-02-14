@@ -29,16 +29,16 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewOrderMenu = asyncHandler(async (req, res) => {
-    const { menu, table, note, quantity, addons, addons_price, status } = req.body
+    const { order, menu, table, note, quantity, addons, addons_price, status } = req.body
 
     //confirm data
-    if (!menu || !table || !quantity ){
+    if (!order || !menu || !table || !quantity ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
     const orderMenuObject = (!Array.isArray(addons) || !addons.length)
-        ? { menu, table, note, quantity, status}
-        : { menu, table, note, quantity, addons, addons_price, status }
+        ? { order, menu, table, note, quantity, status}
+        : { order, menu, table, note, quantity, addons, addons_price, status }
 
     // Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)
@@ -56,10 +56,10 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateOrderMenu = asyncHandler(async (req, res) => {
-    const {id, order, menu, note, quantity, addons, addons_price, status} = req.body
+    const {id, menu, note, quantity, addons, addons_price, status} = req.body
 
     //confirm data
-    if (!id || !order || !menu || !quantity || status < 0){
+    if (!id || !menu || !quantity || status < 0){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
