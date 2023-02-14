@@ -68,7 +68,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 
     order.status = status
     order.price = price
-    if (createdAt) order.createdAt = createdAt
+    order.createdAt = createdAt
 
     const updatedOrder = await order.save()
 

@@ -57,7 +57,7 @@ const updateOwner = asyncHandler(async (req, res) => {
     const {id, email, password, name,} = req.body
 
     //confirm data
-    if (!id || !email || !position || !name){
+    if (!id || !email || !name){
         return res.status(400).json({ message: 'All fields are required'})
     }
 

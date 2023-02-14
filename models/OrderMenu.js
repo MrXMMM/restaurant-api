@@ -10,10 +10,6 @@ const OrderMenuSchema = new mongoose.Schema({
         require: true,
         ref: 'Menu'
     },
-    table:{
-        type: Number,
-        require: true
-    },
     note: {
         type: String
     },
@@ -27,10 +23,6 @@ const OrderMenuSchema = new mongoose.Schema({
     addons_price: {
         type: Number
     },
-    status:{
-        type: Number,
-        require: true
-    }
 })
 
 module.exports = mongoose.model('OrderMenu', OrderMenuSchema)
