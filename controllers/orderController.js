@@ -31,7 +31,7 @@ const createNewOrder = asyncHandler(async (req, res) => {
     const { table, price } = req.body
 
     //confirm data
-    if (!table || !price ){
+    if (!table || price < 0 ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
