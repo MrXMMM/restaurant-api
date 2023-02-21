@@ -21,9 +21,8 @@ const MenuSchema = new mongoose.Schema({
     explaination: {
         type: String
     },
-    img: {
-        data: Buffer,
-        contentType: String,
+    imageURL: {
+        type: String
     }
 })
 

@@ -8,16 +8,17 @@ const asyncHandler = require('express-async-handler')
 // @route POST /auth
 // @access Public
 const login = asyncHandler(async (req, res) => {
-    const { email, password, status } = req.body
-
-    if (!email || !password || !status) {
-        return res.status(400).json({ message: 'All fields are required' })
-    }
+    const { email, password, status, table, phone } = req.body
 
     let accessToken
     let refreshToken
 
     if (status === "employee" ){
+
+        if (!email || !password || !status) {
+            return res.status(400).json({ message: 'All fields are required' })
+        }
+
         const foundEmployee = await Employee.findOne({ email }).exec()
 
         if (!foundEmployee || !foundEmployee.active) {
@@ -35,22 +36,29 @@ const login = asyncHandler(async (req, res) => {
                     "position": foundEmployee.position,
                     "name": foundEmployee.name,
                     "phone": foundEmployee.phone,
-                    "status": "Employee"
+                    "status": "พนักงาน"
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '15m' }
+            { expiresIn: '10s' }
         )
 
         refreshToken = jwt.sign(
-            { "email": foundEmployee.email },
+            { 
+                "data": `${foundEmployee.email}/employee`,
+            },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '7d' }
         )
      
     }
 
-    else{
+    if (status === "owner"){
+
+        if (!email || !password || !status) {
+            return res.status(400).json({ message: 'All fields are required' })
+        }
+
         const foundOwner = await Owner.findOne({ email }).exec()
 
         if (!foundOwner) {
@@ -66,7 +74,7 @@ const login = asyncHandler(async (req, res) => {
             "UserInfo": {
                     "email": foundOwner .email,
                     "name": foundOwner.name,
-                    "status": "Owner"
+                    "status": "เจ้าของ"
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
@@ -74,7 +82,34 @@ const login = asyncHandler(async (req, res) => {
         )
 
         refreshToken = jwt.sign(
-            { "email": foundOwner.email },
+            { 
+                "data": `${foundOwner.email}/owner`,
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '7d' }
+        )
+    }
+
+    if (status === "customer"){
+        
+        if (!table || !phone) return res.status(401).json({ message: 'ข้อมูลไม่ครบถ้วน' })
+
+        accessToken = jwt.sign(
+            {
+            "UserInfo": {
+                    "table": table,
+                    "phone": phone,
+                    "status": "ลูกค้า"
+                }
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '15m' }
+        )
+
+        refreshToken = jwt.sign(
+            { 
+                "data": `${table}/customer/${phone}`,
+            },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '7d' }
         )
@@ -107,22 +142,65 @@ const refresh = (req, res) => {
         asyncHandler(async (err, decoded) => {
             if (err) return res.status(403).json({ message: 'Forbidden' })
 
-            const foundEmployee = await Employee.findOne({ email: decoded.email }).exec()
+            let accessToken
+            const data = decoded.data
+            const data_split = data.split('/')
 
-            if (!foundEmployee) return res.status(401).json({ message: 'Unauthorized' })
+            if (data_split[1] === 'employee'){
 
-            const accessToken = jwt.sign(
-                {
-                    "UserInfo": {
-                        "email": foundEmployee.email,
-                        "position": foundEmployee.position,
-                        "name": foundEmployee.name,
-                        "phone": foundEmployee.phone
-                    }
-                },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '15m' }
-            )
+                const foundEmployee = await Employee.findOne({ email: data_split[0] }).exec()
+
+                if (foundEmployee){
+                    accessToken = jwt.sign(
+                        {
+                            "UserInfo": {
+                                "email": foundEmployee.email,
+                                "position": foundEmployee.position,
+                                "name": foundEmployee.name,
+                                "phone": foundEmployee.phone,
+                                "status": "พนักงาน"
+                            }
+                        },
+                        process.env.ACCESS_TOKEN_SECRET,
+                        { expiresIn: '15m' }
+                    )
+                } else return res.status(401).json({ message: 'Unauthorized' })
+            } 
+
+            else if (data_split[1] === 'owner'){
+
+                const foundOwner = await Owner.findOne({ email: data_split[0] }).exec()
+                if (foundOwner){
+                    accessToken = jwt.sign(
+                        {
+                            "UserInfo": {
+                                "email": foundOwner.email,
+                                "name": foundOwner.name,
+                                "status": "เจ้าของ",
+                            }
+                        },
+                        process.env.ACCESS_TOKEN_SECRET,
+                        { expiresIn: '15m' }
+                    )
+                } else return res.status(401).json({ message: 'Unauthorized' })
+            }
+
+
+            else if (data_split[1] === 'customer'){
+                accessToken = jwt.sign(
+                    {
+                        "UserInfo": {
+                            "table": data_split[0],
+                            "phone": data_split[2],
+                            "status": "ลูกค้า"
+                        }
+                    },
+                    process.env.ACCESS_TOKEN_SECRET,
+                    { expiresIn: '15m' }
+                )
+            }
+
+            else return res.status(401).json({ message: 'Unauthorized' })
 
             res.json({ accessToken })
         })

@@ -9,6 +9,8 @@ const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
 const connectDB = require('./config/dbConn')
 const mongoose = require('mongoose')
+const multer =require('multer')
+const upload = multer({ dest: 'uploads/' })
 const PORT = process.env.PORT || 3500
 
 console.log(process.env.NODE_ENV)
@@ -38,6 +40,7 @@ app.use('/menucategory', require('./routes/menuCategoryRoutes'))
 app.use('/menuaddoncategory', require('./routes/menuAddonCategoryRoutes'))
 app.use('/addon', require('./routes/addonRoutes'))
 app.use('/addoncategory', require('./routes/addonCategoryRoutes'))
+app.use('/uploads', express.static('uploads'))
 
 app.all('*', (req, res) => {
     res.status(404)

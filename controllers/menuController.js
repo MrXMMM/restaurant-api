@@ -29,9 +29,11 @@ const getAllMenu = asyncHandler (async (req, res) => {
 
 const createNewMenu = asyncHandler(async (req, res) => {
     const { category, name, price, explaination} = req.body
+    const imageURL = req.file? req.file.path : null
+    const price_ = parseInt(price, 10)
 
     //confirm data
-    if (!category || !name || !price){
+    if (!category || !name || !price_){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -42,7 +44,7 @@ const createNewMenu = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'duplicate Name' })
     }
 
-    const menuObject = { category, name, price, explaination}
+    const menuObject = { category, name, price_, explaination, imageURL}
 
     // Create and store new menu
     const menu = await Menu.create(menuObject)
@@ -61,9 +63,12 @@ const createNewMenu = asyncHandler(async (req, res) => {
 
 const updateMenu = asyncHandler(async (req, res) => {
     const {id, category, name, price, status, explaination} = req.body
+    const imageURL = req.file? req.file.path : null
+    const status_ = status === 'true'? true : false
+    const price_ = parseInt(price, 10)
 
     //confirm data
-    if (!id || !category || !name || !price || typeof status != 'boolean'){
+    if (!id || !category || !name || !price_ || typeof status_ != 'boolean'){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
@@ -74,10 +79,11 @@ const updateMenu = asyncHandler(async (req, res) => {
     }
 
     menu.category = category
-    menu.status = status
+    menu.status = status_
     menu.name = name
-    menu.price = price
+    menu.price = price_
     menu.explaination = explaination
+    if (imageURL) menu.imageURL = imageURL
 
     const updatedMenu = await menu.save()
 
