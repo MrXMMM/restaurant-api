@@ -3,9 +3,8 @@ const AutoIncrement = require('mongoose-sequence')(mongoose)
 
 const OrderSchema = new mongoose.Schema({
     table: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         require: true,
-        ref: 'Table'
     },
     status: {
         type: Number,

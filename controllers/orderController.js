@@ -15,12 +15,8 @@ const getAllOrder = asyncHandler (async (req, res) => {
     // Add order to each note before sending the response 
     // See Promise.all with map() here: https://youtu.be/4lqJBBEpjRE 
     // You could also do this with a for...of loop
-    const orderswithTable = await Promise.all(orders.map(async (order) => {
-        const table = await Table.findById(order.table).lean().exec()
-        return { ...order, table: table.table_num }
-    }))
 
-    res.json(orderswithTable)
+    res.json(orders)
 })
  
 // @desc Create all Order
@@ -31,7 +27,7 @@ const createNewOrder = asyncHandler(async (req, res) => {
     const { table, price } = req.body
 
     //confirm data
-    if (!table || price < 0 ){
+    if (!table || price < 0){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
