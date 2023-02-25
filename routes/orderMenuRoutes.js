@@ -3,6 +3,7 @@ const router = express.Router()
 const orderMenuController = require('../controllers/orderMenuController')
 const verifyJWT = require('../middleware/verifyJWT')
 
+router.use(verifyJWT)
 
 router.route('/')
     .get(orderMenuController.getAllOrderMenu)

@@ -5,7 +5,7 @@ const verifyJWT = require('../middleware/verifyJWT')
 const multer =require('multer')
 const upload = multer({ dest: 'uploads/' })
 
-//router.use(verifyJWT)
+router.use(verifyJWT)
 
 router.route('/')
     .get(menuController.getAllMenu)

@@ -3,6 +3,7 @@ const router = express.Router()
 const addonCategoryController = require('../controllers/addonCategoryController')
 const verifyJWT = require('../middleware/verifyJWT')
 
+router.use(verifyJWT)
 
 router.route('/')
     .get(addonCategoryController.getAllAddonC)

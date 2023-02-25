@@ -3,7 +3,7 @@ const router = express.Router()
 const menuCategoryController = require('../controllers/menuCategoryController')
 const verifyJWT = require('../middleware/verifyJWT')
 
-
+router.use(verifyJWT)
 
 router.route('/')
     .get(menuCategoryController.getAllMenuC)
