@@ -81,13 +81,9 @@ const deleteTable = asyncHandler(async (req, res) => {
     }
 
     const table_find = await Table.findById(id).exec()
-
-    const order = await Order.findOne({ table: table_find.table_num }).lean().exec()
-
-    const order_filter = [order].filter(order => order.status === 1 || order.status === 2)
     
-    if (order_filter.length){
-        return res.status(400).json({ message: `เนื่องจากยังไม่ได้ชำระเงิน และมีออเดอร์ตกค้าง` })
+    if (table_find.status === false){
+        return res.status(400).json({ message: `เนื่องจากยังไม่ได้ชำระเงิน` })
     }
 
     // Confirm table exists to delete 
