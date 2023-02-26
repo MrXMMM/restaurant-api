@@ -121,7 +121,6 @@ const login = asyncHandler(async (req, res) => {
         secure: true, //https
         sameSite: 'None', //cross-site cookie 
         maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT
-        Secure
     })
     // Send accessToken containing email and employee info
     res.json({ accessToken })
