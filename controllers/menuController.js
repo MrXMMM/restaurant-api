@@ -44,7 +44,7 @@ const createNewMenu = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'duplicate Name' })
     }
 
-    const menuObject = { category, name, price_, explaination, imageURL}
+    const menuObject = { category, name, price: price_, explaination, imageURL}
 
     // Create and store new menu
     const menu = await Menu.create(menuObject)
