@@ -8,6 +8,10 @@ const TableSchema = new mongoose.Schema({
     status: {
         type: Boolean,
         default: true
+    },
+    customer_num: {
+        type: Number,
+        default: 4
     }
 })
 
