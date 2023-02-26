@@ -132,7 +132,7 @@ const login = asyncHandler(async (req, res) => {
 const refresh = (req, res) => {
     const cookies = req.cookies
 
-    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' })
+    if (!cookies?.jwt) return res.status(401).json({ message: 'case1' })
 
     const refreshToken = cookies.jwt
 
@@ -200,7 +200,7 @@ const refresh = (req, res) => {
                 )
             }
 
-            else return res.status(401).json({ message: 'Unauthorized' })
+            else return res.status(401).json({ message: 'case3' })
 
             res.json({ accessToken })
         })
