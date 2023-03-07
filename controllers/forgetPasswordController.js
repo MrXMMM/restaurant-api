@@ -48,13 +48,14 @@ const forgetPassword = asyncHandler(async (req, res) => {
             subject: "Password Reset",
             text: `คลิ๊กลิงค์ เพื่อทำการเปลี่ยนรหัสผ่าน ${link}`,
         }
-  
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                res.status(401).json({ message: error })
-            } else {
-                res.status(400).json({ message: "Email sent: " + info.response})
-            }
+        new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, function (error, info) {
+                  if (error) {
+                    res.status(401).json({ message: error })
+                  } else {
+                    res.status(400).json({ message: "Email sent: " + info.response})
+                  }
+              })
         })
     } catch (error) { }
 })
