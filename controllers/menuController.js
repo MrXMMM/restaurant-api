@@ -64,7 +64,10 @@ const createNewMenu = asyncHandler(async (req, res) => {
 const updateMenu = asyncHandler(async (req, res) => {
     const {id, category, name, price, status, explaination} = req.body
     const imageURL = req.file? req.file.path : null
-    const status_ = status === 'true'? true : false
+    let status_ = status
+    if (typeof status != 'boolean'){
+        status_ = status === 'true'? true : false
+    }
     const price_ = parseInt(price, 10)
 
     //confirm data

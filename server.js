@@ -40,6 +40,8 @@ app.use('/menucategory', require('./routes/menuCategoryRoutes'))
 app.use('/menuaddoncategory', require('./routes/menuAddonCategoryRoutes'))
 app.use('/addon', require('./routes/addonRoutes'))
 app.use('/addoncategory', require('./routes/addonCategoryRoutes'))
+app.use('/forgetpassword', require('./routes/forgetPasswordRoutes'))
+app.use('/resetpassword', require('./routes/resetPasswordRoutes'))
 app.use('/uploads', express.static('uploads'))
 
 app.all('*', (req, res) => {
