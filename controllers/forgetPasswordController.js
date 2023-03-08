@@ -24,7 +24,6 @@ const forgetPassword = asyncHandler(async (req, res) => {
             return res.json({ status: "User Not Exists!!" });
         }
         const secret = process.env.EMAIL_TOKEN_SECRET
-        console.log(secret)
         const token = jwt.sign({ 
                             "UserInfo": {
                                     "email": oldUser.email,
@@ -52,9 +51,9 @@ const forgetPassword = asyncHandler(async (req, res) => {
 
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                res.status(401).json({ message: error })
+                console.log(error)
             } else {
-                res.status(400).json({ message: "Email sent: " + info.response})
+                console.log("Email sent: " + info.response)
             }
         })
     } catch (error) { }
@@ -73,7 +72,10 @@ const ResetPassword = asyncHandler(async (req, res) => {
         token,
         secret,
         asyncHandler(async (err, decoded) => {
-            if (err) return res.status(403).json({ message: 'ลิงค์หมดอายุ' })
+            if (err){
+                console.log(err)
+                return res.status(403).json({ message: 'Forbidden' })
+            } 
 
             const status = decoded.UserInfo.status
 
