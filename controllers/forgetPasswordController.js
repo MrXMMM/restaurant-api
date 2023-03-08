@@ -32,7 +32,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
                                     "status": status
                             }}, 
                             secret, { expiresIn: "5m", })
-        const link = `http://localh*ost:3000/resetpassword/${oldUser._id}/${token}`
+        const link = `https://restaurant-yq9o.onrender.com/resetpassword/${oldUser._id}/${token}`
         var transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com', port: 587,
             auth: {
