@@ -31,9 +31,9 @@ const forgetPassword = asyncHandler(async (req, res) => {
                                     "status": status
                             }}, 
                             secret, { expiresIn: "5m", })
-        const link = `https://restaurant-yq9o.onrender.com/resetpassword/${oldUser._id}/${token}`
+        const link = `http://localhost:3000/resetpassword/${oldUser._id}/${token}`
         var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com', port: 587,
+            host: 'smtp.gmail.com', port: 587, secure: false,
             auth: {
                 user: "restaurant.testing35@gmail.com",
                 pass: "vzuhtevefyyvjqul",
@@ -52,8 +52,10 @@ const forgetPassword = asyncHandler(async (req, res) => {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error)
+                res.status(400).json({ message: error })
             } else {
                 console.log("Email sent: " + info.response)
+                res.status(201).json({ message: "Email sent: " + info.response })
             }
         })
     } catch (error) { }
