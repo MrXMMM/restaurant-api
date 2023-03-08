@@ -23,7 +23,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
         if (!oldUser) {
             return res.json({ status: "User Not Exists!!" });
         }
-        const secret = process.env.ACCESS_TOKEN_SECRET
+        const secret = process.env.EMAIL_TOKEN_SCERET
         console.log(secret)
         const token = jwt.sign({ 
                             "UserInfo": {
@@ -32,7 +32,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
                                     "status": status
                             }}, 
                             secret, { expiresIn: "5m", })
-        const link = `http://localhost:3000/resetpassword/${oldUser._id}/${token}`
+        const link = `http://localh*ost:3000/resetpassword/${oldUser._id}/${token}`
         var transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com', port: 587,
             auth: {
@@ -68,7 +68,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
 const ResetPassword = asyncHandler(async (req, res) => {
     const { id, token, password } = req.body;
     
-    const secret = process.env.ACCESS_TOKEN_SECRET
+    const secret = process.env.EMAIL_TOKEN_SCERET
 
     jwt.verify(
         token,
