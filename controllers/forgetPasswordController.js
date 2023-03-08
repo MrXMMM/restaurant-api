@@ -23,7 +23,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
         if (!oldUser) {
             return res.json({ status: "User Not Exists!!" });
         }
-        const secret = process.env.EMAIL_TOKEN_SCERET
+        const secret = process.env.EMAIL_TOKEN_SECRET
         console.log(secret)
         const token = jwt.sign({ 
                             "UserInfo": {
@@ -49,14 +49,13 @@ const forgetPassword = asyncHandler(async (req, res) => {
             subject: "Password Reset",
             text: `คลิ๊กลิงค์ เพื่อทำการเปลี่ยนรหัสผ่าน ${link}`,
         }
-        new Promise((resolve, reject) => {
-            transporter.sendMail(mailOptions, function (error, info) {
-                  if (error) {
-                    res.status(401).json({ message: error })
-                  } else {
-                    res.status(400).json({ message: "Email sent: " + info.response})
-                  }
-              })
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                res.status(401).json({ message: error })
+            } else {
+                res.status(400).json({ message: "Email sent: " + info.response})
+            }
         })
     } catch (error) { }
 })
@@ -68,7 +67,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
 const ResetPassword = asyncHandler(async (req, res) => {
     const { id, token, password } = req.body;
     
-    const secret = process.env.EMAIL_TOKEN_SCERET
+    const secret = process.env.EMAIL_TOKEN_SECRET
 
     jwt.verify(
         token,
