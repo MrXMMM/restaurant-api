@@ -5,6 +5,10 @@ const OrderMenuSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'
     },
+    menu: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu'
+    },
     menu_name: {
         type: String,
         require: true,
