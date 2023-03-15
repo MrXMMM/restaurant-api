@@ -5,10 +5,13 @@ const OrderMenuSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'
     },
-    menu: {
-        type: mongoose.Schema.Types.ObjectId,
+    menu_name: {
+        type: String,
         require: true,
-        ref: 'Menu'
+    },
+    menu_price:{
+        type: Number,
+        require: true,
     },
     note: {
         type: String

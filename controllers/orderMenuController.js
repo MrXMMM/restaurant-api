@@ -12,16 +12,7 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
     if (!orderMenus?.length){
         return res.status(400).json({ message: 'No orderMenus found'})
     }
-
-    // Add orderOrderMenu to each note before sending the response 
-    // See Promise.all with map() here: https://youtu.be/4lqJBBEpjRE 
-    // You could also do this with a for...of loop
-    const orderMenuswithOrder = await Promise.all(orderMenus.map(async (orderMenu) => {
-        const menu = await Menu.findById(orderMenu.menu).lean().exec()
-        return { ...orderMenu, menu_name: menu.name, menu_price: menu.price }
-    }))
-
-    res.json(orderMenuswithOrder)
+    res.json(orderMenus)
 })
 
 // @desc Create all OrderMenu
@@ -29,16 +20,16 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
 // @access Private
 
 const createNewOrderMenu = asyncHandler(async (req, res) => {
-    const { order, menu, note, quantity, addons, addons_price } = req.body
+    const { order, menu_name, menu_price, note, quantity, addons, addons_price } = req.body
 
     //confirm data
-    if (!order || !menu || !quantity ){
+    if (!order || !menu_name || !menu_price || !quantity ){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
     const orderMenuObject = (!Array.isArray(addons) || !addons.length)
-        ? { order, menu, note, quantity}
-        : { order, menu, note, quantity, addons, addons_price }
+        ? { order, menu_name, menu_price, note, quantity}
+        : { order, menu_name, menu_price, note, quantity, addons, addons_price }
 
     // Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)

@@ -58,7 +58,7 @@ const updateEmp = asyncHandler(async (req, res) => {
     const {id, email, password, position, name, phone, active} = req.body
 
     //confirm data
-    if (!id || !email || !position || !name || !phone || typeof active != 'boolean'){
+    if (!id || !email || !position || !name || !phone){
         return res.status(400).json({ message: 'All fields are required'})
     }
 
