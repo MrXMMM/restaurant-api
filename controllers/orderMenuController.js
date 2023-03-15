@@ -12,7 +12,18 @@ const getAllOrderMenu = asyncHandler (async (req, res) => {
     if (!orderMenus?.length){
         return res.status(400).json({ message: 'No orderMenus found'})
     }
-    res.json(orderMenus)
+
+    const orderMenuswithMenu = await Promise.all(orderMenus.map(async (ordermenu) => {
+        const menu = await Menu.findById(ordermenu.menu).lean().exec()
+        if (menu){
+            return { ...ordermenu, menu_name : menu.name, menu_price: menu.price }
+        }
+        else{
+            return { ...ordermenu }
+        }
+    }))
+ 
+    res.json(orderMenuswithMenu)
 })
 
 // @desc Create all OrderMenu
@@ -31,10 +42,10 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
         ? { order, menu, menu_name, menu_price, note, quantity}
         : { order, menu, menu_name, menu_price, note, quantity, addons, addons_price }
 
-    // Create and store new orderMenu
+    //Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)
 
-    if (orderMenu){ //created
+   if (orderMenu){ //created
         res.status(201).json({ message: `New OrderMenu created` })
     }
     else{ //Not create
