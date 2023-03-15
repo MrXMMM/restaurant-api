@@ -28,8 +28,8 @@ const createNewOrderMenu = asyncHandler(async (req, res) => {
     }
 
     const orderMenuObject = (!Array.isArray(addons) || !addons.length)
-        ? { order, menu_name, menu_price, note, quantity}
-        : { order, menu_name, menu_price, note, quantity, addons, addons_price }
+        ? { order, menu, menu_name, menu_price, note, quantity}
+        : { order, menu, menu_name, menu_price, note, quantity, addons, addons_price }
 
     // Create and store new orderMenu
     const orderMenu = await OrderMenu.create(orderMenuObject)
