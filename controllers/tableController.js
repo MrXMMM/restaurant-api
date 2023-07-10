@@ -47,7 +47,7 @@ const createNewTable = asyncHandler(async (req, res) => {
 })
 
 const updateTable = asyncHandler(async (req, res) => {
-    const {id, status, customer_num} = req.body
+    const {id, status, customer_num, customer_phone} = req.body
 
     //confirm data
     if (!id || typeof status != 'boolean'){
@@ -64,6 +64,10 @@ const updateTable = asyncHandler(async (req, res) => {
     table.status = status
     if (customer_num){
         table.customer_num = customer_num
+    }
+
+    if (customer_phone){
+        table.customer_phone = customer_phone
     }
 
     const updatedTable = await table.save()

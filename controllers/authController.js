@@ -8,7 +8,7 @@ const asyncHandler = require('express-async-handler')
 // @route POST /auth
 // @access Public
 const login = asyncHandler(async (req, res) => {
-    const { email, password, status, table, phone } = req.body
+    const { email, password, status, tableid, phone } = req.body
 
     let accessToken
     let refreshToken
@@ -92,12 +92,12 @@ const login = asyncHandler(async (req, res) => {
 
     if (status === "customer"){
         
-        if (!table || !phone) return res.status(401).json({ message: 'ข้อมูลไม่ครบถ้วน' })
+        if (!tableid || !phone) return res.status(401).json({ message: 'ข้อมูลไม่ครบถ้วน' })
 
         accessToken = jwt.sign(
             {
             "UserInfo": {
-                    "table": table,
+                    "table": tableid,
                     "phone": phone,
                     "status": "ลูกค้า"
                 }
@@ -108,7 +108,7 @@ const login = asyncHandler(async (req, res) => {
 
         refreshToken = jwt.sign(
             { 
-                "data": `${table}/customer/${phone}`,
+                "data": `${tableid}/customer/${phone}`,
             },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '7d' }

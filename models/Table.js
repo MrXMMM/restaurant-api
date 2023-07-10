@@ -12,6 +12,9 @@ const TableSchema = new mongoose.Schema({
     customer_num: {
         type: Number,
         default: 4
+    },
+    customer_phone: {
+        type: String
     }
 })
 
